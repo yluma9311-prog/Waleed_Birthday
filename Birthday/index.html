@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Waleed! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Playfair+Display:ital,wght@0,600;1,400&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #1a0508;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* الشاشات التفاعلية العامة */
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(43, 8, 14, 0.88), rgba(26, 5, 8, 0.95)), url('im/imm.jpg') center/cover no-repeat;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            padding: 20px;
+        }
+
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 100;
+        }
+
+        #dashboard-screen.screen {
+            position: relative;
+            width: 100vw;
+            height: auto;
+            min-height: 100vh;
+            overflow-y: auto;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .dashboard-section {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .header-envelope-box {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            background: rgba(122, 60, 85, 0.65);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            padding: 45px 30px 25px 30px;
+            overflow: hidden;
+        }
+
+        .header-top-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: #f8bbd0;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            direction: ltr;
+        }
+
+        .header-main-name {
+            font-family: 'Alex Brush', cursive;
+            font-size: 5.5rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+            direction: ltr;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .header-sub-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            letter-spacing: 4px;
+            color: #fce4ec;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            direction: ltr;
+        }
+
+        .envelope-pocket-container {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            height: 230px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .polaroid-container {
+            position: absolute;
+            bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 2;
+        }
+
+        .polaroid-frame {
+            background: #ffffff;
+            padding: 8px 8px 18px 8px;
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            transform: rotate(-7deg);
+            transition: transform 0.3s;
+        }
+
+        .polaroid-frame:nth-child(2) {
+            transform: rotate(7deg);
+        }
+
+        .polaroid-frame:hover {
+            transform: scale(1.1) rotate(0deg);
+            z-index: 10;
+        }
+
+        .polaroid-frame img {
+            width: 130px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+
+        .envelope-pocket-front {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 115px;
+            background: #f1c5ad;
+            border-radius: 10px 10px 20px 20px;
+            z-index: 3;
+            clip-path: polygon(0 25%, 50% 0, 100% 25%, 100% 100%, 0 100%);
+            box-shadow: 0 -8px 20px rgba(0,0,0,0.3);
+        }
+
+        .choices-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .choice-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(248, 187, 208, 0.4);
+            border-radius: 24px;
+            padding: 30px 20px;
+            width: 250px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .choice-item:hover {
+            transform: translateY(-8px) scale(1.03);
+            background: rgba(255, 255, 255, 0.18);
+            border-color: #f8bbd0;
+        }
+
+        .choice-img-box {
+            width: 100px;
+            height: 90px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .choice-label {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fce4ec;
+            letter-spacing: 2px;
+        }
+
+        .gift-trigger-wrapper {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .gift-trigger-box {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 35px 50px;
+            border-radius: 30px;
+            border: 2px dashed rgba(248, 187, 208, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            width: 100%;
+        }
+
+        .gift-trigger-box:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .gift-box-icon {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            transition: transform 0.4s;
+        }
+
+        .gift-trigger-box:hover .gift-box-icon {
+            transform: rotate(-10deg) scale(1.15);
+        }
+
+        .gift-trigger-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #f8bbd0;
+            letter-spacing: 2px;
+            direction: ltr;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 40px 25px;
+            text-align: center;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #fce4ec;
+            margin-bottom: 25px;
+            text-shadow: 0 4px 15px rgba(255, 192, 203, 0.4);
+            direction: ltr;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(248, 187, 208, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            margin-bottom: 25px;
+        }
+
+        .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .enter-btn {
+            background: rgba(128, 0, 32, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            font-family: 'Alex Brush', cursive;
+            font-size: 1.8rem;
+            padding: 10px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .enter-btn:hover {
+            background: rgba(128, 0, 32, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .error-msg {
+            color: #ff8a80;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .envelope-title {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3.5rem;
+            color: #f8bbd0;
+            margin-bottom: 20px;
+            direction: ltr;
+            animation: bounceText 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 280px;
+            height: 190px;
+            background: #e8a5b8;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: envelopeShake 3s infinite ease-in-out;
+            transition: transform 0.4s;
+        }
+
+        .envelope-wrapper:hover { transform: scale(1.05); }
+
+        @keyframes envelopeShake {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(-3deg) scale(1.02); }
+            30% { transform: rotate(3deg) scale(1.02); }
+            45% { transform: rotate(-2deg); }
+            60% { transform: rotate(2deg); }
+            75% { transform: rotate(0deg); }
+        }
+
+        .wax-seal {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #a31d36 0%, #680d1e 100%);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffd700;
+            font-size: 1.5rem;
+        }
+
+        .sub-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #2b080e 0%, #1a0508 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            z-index: 120;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease;
+            overflow-y: auto;
+        }
+
+        .sub-screen.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+            z-index: 130;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+        .letter-card-full {
+            background: linear-gradient(145deg, #fff5f8 0%, #fce4ec 100%);
+            color: #4a0e17;
+            border: 2px solid #f8bbd0;
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 680px;
+            width: 100%;
+            text-align: right;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .letter-card-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            color: #800020;
+            text-align: center;
+            margin-bottom: 25px;
+            direction: ltr;
+        }
+
+        .letter-paragraph {
+            font-size: 1.1rem;
+            line-height: 2.1;
+            color: #33080e;
+            margin-bottom: 15px;
+            text-align: justify;
+            font-weight: 500;
+        }
+
+        .flowers-layout {
+            max-width: 850px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .bouquet-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .flower-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .center-bouquet-svg {
+            width: 220px;
+            height: 250px;
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.4));
+        }
+
+        .flower-card-item {
+            background: rgba(252, 228, 236, 0.9);
+            color: #4a0e17;
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            border: 1px solid #f8bbd0;
+            direction: ltr;
+            transition: transform 0.3s;
+        }
+        .flower-card-item:hover {
+            transform: scale(1.05);
+        }
+
+        .flowers-sub-title {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3rem;
+            color: #f8bbd0;
+            margin-top: 10px;
+            direction: ltr;
+        }
+
+        /* -------------------------------------------------------------
+           تنسيقات جزء الكيك والأسطوانة والبرواز (تعديل دقيق لصورة وليد)
+        ------------------------------------------------------------- */
+        .cake-screen-bg {
+            width: 100%;
+            max-width: 850px;
+            background: rgba(92, 29, 46, 0.75);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 24px;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .static-star {
+            position: absolute;
+            font-size: 26px;
+            color: #ffd700;
+            filter: drop-shadow(0 2px 6px rgba(255,215,0,0.5));
+            z-index: 2;
+        }
+
+        .static-balloon {
+            position: absolute;
+            font-size: 34px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+            z-index: 2;
+        }
+
+        .cake-center-wrapper {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 20px;
+            z-index: 3;
+        }
+
+        .camera-photo-box {
+            background: #181818;
+            border: 2px solid #a31d36;
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            width: 220px;
+            height: 310px;
+        }
+
+        /* الصورة الفوقية (صورتك) */
+        .camera-photo-box img.img-top {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            object-position: center center;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        /* الصورة السفلية (صورة وليد) - تم ضبط موضعها لترتفع قليلاً وتتوسط الوجه تماماً */
+        .camera-photo-box img.img-bottom {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            object-position: center 30%; /* تم رفعها قليلاً لتتوسط الإطار وتظهر ملامح وجهه بشكل مثالي */
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .center-cake-box {
+            font-size: 6.5rem;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        }
+
+        .vinyl-record-box {
+            width: 165px;
+            height: 165px;
+            background: radial-gradient(circle, #0d0d0d 0%, #1a1a1a 70%, #000000 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,255,255,0.1);
+            border: 5px solid #d4af37;
+            animation: spinVinyl 6s linear infinite;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .vinyl-record-box::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+        }
+
+        @keyframes spinVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .vinyl-inner {
+            width: 58px;
+            height: 58px;
+            background: radial-gradient(circle, #a31d36 0%, #680d1e 100%);
+            border-radius: 50%;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            direction: ltr;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+
+        .gift-content-box {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .gift-header-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #f8bbd0;
+            margin-bottom: 25px;
+            direction: ltr;
+        }
+
+        .eight-photos-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .eight-photos-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .eight-photos-grid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid rgba(248, 187, 208, 0.4);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            transition: transform 0.3s;
+        }
+        .eight-photos-grid img:hover { transform: scale(1.05); }
+
+        .local-video-container {
+            width: 100%;
+            max-width: 600px;
+            height: 340px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border: 2px solid rgba(248, 187, 208, 0.3);
+        }
+
+        .local-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ملف الموسيقى -->
+    <audio id="bg-music" loop>
+        <source src="im/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 1. شاشة تسجيل الدخول -->
+    <div id="login-screen" class="screen active">
+        <div class="login-card">
+            <h1 class="login-title">Happy Birthday Waleed!</h1>
+            <input type="date" id="birthdate" class="date-input">
+            <button id="enter-btn" class="enter-btn">Click here!</button>
+            <div id="error-msg" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- 2. شاشة الظرف المغلق -->
+    <div id="envelope-screen" class="screen">
+        <h2 class="envelope-title">open me!</h2>
+        <div id="envelope-btn" class="envelope-wrapper">
+            <div class="wax-seal">💌</div>
+        </div>
+    </div>
+
+    <!-- 3. الشاشة الرئيسية (Dashboard) -->
+    <div id="dashboard-screen" class="screen">
+        <div class="dashboard-container">
+            
+            <!-- الشاشة الأولى: الظرف والصور واسم وليد -->
+            <div class="dashboard-section">
+                <div class="header-envelope-box">
+                    <div class="header-top-text">TO THE MOST BEAUTIFUL MAN!</div>
+                    <div class="header-main-name">Waleed</div>
+                    <div class="header-sub-title">HAPPY BIRTHDAY, LOVE</div>
+                    
+                    <div class="envelope-pocket-container">
+                        <div class="polaroid-container">
+                            <div class="polaroid-frame">
+                                <img src="im/IMG_8076.JPG" alt="Waleed 1">
+                            </div>
+                            <div class="polaroid-frame">
+                                <img src="im/IMG_9129.jpg" alt="Waleed 2">
+                            </div>
+                        </div>
+                        <div class="envelope-pocket-front"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الشاشة الثانية: الأشكال الثلاثة -->
+            <div class="dashboard-section">
+                <div class="choices-grid">
+                    <div class="choice-item" onclick="openSubScreen('message-sub')">
+                        <div class="choice-img-box">
+                            <svg viewBox="0 0 100 70" width="80" height="60">
+                                <rect x="5" y="10" width="90" height="55" rx="6" fill="#e8a5b8" stroke="#c2788d" stroke-width="2"/>
+                                <path d="M 5 12 L 50 42 L 95 12" fill="none" stroke="#c2788d" stroke-width="2"/>
+                                <circle cx="50" cy="40" r="8" fill="#a31d36"/>
+                            </svg>
+                        </div>
+                        <div class="choice-label">MESSAGE</div>
+                    </div>
+
+                    <div class="choice-item" onclick="openSubScreen('flowers-sub')">
+                        <div class="choice-img-box">
+                            <svg viewBox="0 0 100 100" width="80" height="80">
+                                <path d="M 35 60 L 50 90 L 65 60 Z" fill="#f8bbd0"/>
+                                <circle cx="35" cy="40" r="14" fill="#e91e63"/>
+                                <circle cx="65" cy="40" r="14" fill="#f48fb1"/>
+                                <circle cx="50" cy="28" r="15" fill="#ff4081"/>
+                                <circle cx="50" cy="48" r="12" fill="#ff80ab"/>
+                                <path d="M 40 80 Q 50 85 60 80" fill="none" stroke="#d81b60" stroke-width="3"/>
+                            </svg>
+                        </div>
+                        <div class="choice-label">FLOWERS</div>
+                    </div>
+
+                    <div class="choice-item" onclick="openSubScreen('cake-sub')">
+                        <div class="choice-img-box">
+                            <svg viewBox="0 0 100 100" width="80" height="80">
+                                <ellipse cx="50" cy="68" rx="35" ry="14" fill="#f8bbd0"/>
+                                <path d="M 15 68 L 15 82 A 35 14 0 0 0 85 82 L 85 68 Z" fill="#f48fb1"/>
+                                <ellipse cx="50" cy="52" rx="35" ry="13" fill="#ffffff"/>
+                                <rect x="47" y="25" width="6" height="20" fill="#ffd700"/>
+                                <polygon points="50,15 46,25 54,25" fill="#ff5722"/>
+                            </svg>
+                        </div>
+                        <div class="choice-label">CAKE</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الشاشة الثالثة: زر الهدية الكبير -->
+            <div class="dashboard-section">
+                <div class="gift-trigger-wrapper">
+                    <div class="gift-trigger-box" onclick="openSubScreen('gift-sub')">
+                        <div class="gift-box-icon">🎁</div>
+                        <div class="gift-trigger-text">Open Your Gift ✨</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- الشاشات الفرعية الداخلية -->
+
+    <!-- أ. نافذة MESSAGE -->
+    <div id="message-sub" class="sub-screen">
+        <button class="back-btn" onclick="closeSubScreen('message-sub')">← رجوع</button>
+        <div class="letter-card-full">
+            <h2 class="letter-card-title">Happy Birthday Waleed 💖</h2>
+            <p class="letter-paragraph">هابييي بيرث داييي روحي وليدد❣️</p>
+            <p class="letter-paragraph">إلى رفيق عمري ، ورفيق خطواتي ودربي وسنيني كلهاا. كل سنة وأنت طيب، وكل عام وأنت بخير وصحة وسلامة وراحة بال. اليوم مش مجرد عيد ميلادك، اليوم عيد ميلاد اقرب حد ليي، عزيز دربي، وأعز وأقرب إنسان لقلبي في هذه الحياة. في يوم ميلادك أني مش جالس أدور كلمات كثيرة أني أدور كلمات صادقة وتليق بمكانتك الكبيرة في قلبي.</p>
+            <p class="letter-paragraph">ودائماً تكتمل السنين وتمر، وأنت تزيد بقلبي معزة وغلاوة ، أنت السند والملاذ والأخ والصديق دائماً والشخص الذي ألقاه وقت ما أضيق .ما قد حسيت بوجودك إلا بالخير والراحة، ولا قد احتجتك في موقف إلا ولقيتك قبالي قبل الكل.</p>
+            <p class="letter-paragraph">تمضي الأيام والسنين وبتتغير حاجات كثيرة حولنا بس انت عارف إنه بيبقى في قلبي امتنان خاص لكل لحظة جمعتني بك، ولكل ذكرى حلوة عملناها سوا، ولكل تعب وجهد بذلته مشاننا. أحب وجودك في حياتي أكثر مما أقدر أوصفه بالكلام، وأحلى شي بالدنيا إني أشوفك دايم بخير وسعادة وطمأنينة.</p>
+            <p class="letter-paragraph">أتمنى في عامك الجديد هذا إن الله يفتح لك أبواب الخير والرزق والنجاح من وسع، ويحقق لك كل طموحاتك وأحلامك التي تتمنها وتطمح لها والله يبعد عنك كل شر وكل هم، ويجعل أيامك كلها فرح والسعادة، ويديمك لي نعم الصاحب والسند طول العمر، ولا يحرمنا منك ومن طيبة قلبك وضحكتك الحلوة </p>
+            <p class="letter-paragraph">عقبال المية سنة يا رب، وأنت في أتم الصحة والعافية ومحقق كل أمانيك، ونفرح بك وبكل نجاحاتك خطوة بخطوة كل عام وأنت أقرب الناس لقلبي، وكل عام وأنت سكينة روحي وسند أيامي وأجمل أقداري.</p>
+            <p class="letter-paragraph" style="text-align:center; font-weight:bold; margin-top:20px; color:#800020; font-size:1.3rem;">عيد ميلاد سعيد وليدي! 😝❤️❤️❤️</p>
+        </div>
+    </div>
+
+    <!-- ب. نافذة FLOWERS -->
+    <div id="flowers-sub" class="sub-screen">
+        <button class="back-btn" onclick="closeSubScreen('flowers-sub')">← رجوع</button>
+        <div class="flowers-layout">
+            <div class="bouquet-container">
+                <div class="flower-column">
+                    <div class="flower-card-item">Flowers for the most beautiful person ❤️</div>
+                    <div class="flower-card-item">For my favorite person in the world 🌹</div>
+                </div>
+                
+                <svg class="center-bouquet-svg" viewBox="0 0 200 240">
+                    <path d="M 60 140 L 100 220 L 140 140 Z" fill="#f8bbd0"/>
+                    <path d="M 50 140 C 30 100, 70 80, 100 120 Z" fill="#ff80ab"/>
+                    <circle cx="80" cy="80" r="22" fill="#ff4081"/>
+                    <circle cx="120" cy="80" r="22" fill="#f48fb1"/>
+                    <circle cx="100" cy="55" r="25" fill="#ff80ab"/>
+                    <circle cx="100" cy="95" r="20" fill="#ffffff"/>
+                    <path d="M 85 180 Q 100 195 115 180" fill="none" stroke="#d81b60" stroke-width="4"/>
+                </svg>
+
+                <div class="flower-column">
+                    <div class="flower-card-item">These flowers are just for you 🌸</div>
+                    <div class="flower-card-item">You deserve all the flowers in the world 💐</div>
+                </div>
+            </div>
+            <h2 class="flowers-sub-title">A bouquet made with love</h2>
+        </div>
+    </div>
+
+    <!-- ج. نافذة CAKE -->
+    <div id="cake-sub" class="sub-screen">
+        <button class="back-btn" onclick="closeSubScreen('cake-sub')">← رجوع</button>
+        
+        <div class="cake-screen-bg">
+            <div class="static-star" style="top: 15px; left: 50%; transform: translateX(-50%);">⭐</div>
+            <div class="static-star" style="top: 20px; left: 15%;">⭐</div>
+            <div class="static-star" style="top: 20px; right: 15%;">⭐</div>
+            
+            <div class="static-balloon" style="top: 15px; left: 30px;">🎈</div>
+            <div class="static-balloon" style="top: 15px; right: 30px;">🎈</div>
+
+            <h2 style="font-family:'Great Vibes', cursive; font-size:3.2rem; color:#f8bbd0; direction:ltr; z-index:3;">Happy Birthday</h2>
+            
+            <div class="cake-center-wrapper">
+                
+                <!-- البرواز يحتوي على الصورتين مع ضبط الموضع المثالي لصورة وليد -->
+                <div class="camera-photo-box">
+                    <img src="im/IMG_8076.JPG" alt="Camera photo 1" class="img-top">
+                    <img src="im/IMG_9129.jpg" alt="Camera photo 2" class="img-bottom">
+                </div>
+
+                <div class="center-cake-box">🎂</div>
+
+                <div class="vinyl-record-box">
+                    <div class="vinyl-inner">CLICK</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- د. نافذة الهدية التفاعلية -->
+    <div id="gift-sub" class="sub-screen">
+        <button class="back-btn" onclick="closeSubScreen('gift-sub')">← رجوع</button>
+        <div class="gift-content-box" style="overflow-y: auto; max-height: 100vh; padding: 20px;">
+            <div style="margin-top: 30px; margin-bottom: 25px; text-align: center;">
+                <h2 class="gift-header-text" style="font-size: 2.5rem; color: #ffffff; margin: 0; direction: ltr; display: inline-block;">I’m your biggest gift in the world 😝</h2>
+            </div>
+            
+            <div class="eight-photos-grid">
+                <img src="im/imgh.JPG" alt="Memory 1">
+                <img src="im/imgg.JPG" alt="Memory 2">
+                <img src="im/IMG_9113.JPG" alt="Memory 3">
+                <img src="im/IMG_8580.JPG" alt="Memory 4">
+                <img src="im/IMG_7723.JPG" alt="Memory 5">
+                <img src="im/IMG_2784.PNG" alt="Memory 6">
+                <img src="im/img.JPG" alt="Memory 7">
+                <img src="im/imghh.JPG" alt="Memory 8">
+            </div>
+
+            <div class="local-video-container" style="margin-top: 30px; text-align: center;">
+                <video id="gift-video" controls>
+                    <source src="im/video.mp4" type="video/mp4">
+                    المتصفح لديك لا يدعم تشغيل الفيديو.
+                </video>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const loginScreen = document.getElementById('login-screen');
+    const envelopeScreen = document.getElementById('envelope-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
+    const enterBtn = document.getElementById('enter-btn');
+    const envelopeBtn = document.getElementById('envelope-btn');
+    const bgMusic = document.getElementById('bg-music');
+    const giftVideo = document.getElementById('gift-video');
+
+    enterBtn.addEventListener('click', function() {
+        const inputDate = document.getElementById('birthdate').value;
+        const errorMsg = document.getElementById('error-msg');
+        
+        if (!inputDate) {
+            errorMsg.textContent = 'الرجاء اختيار تاريخ الميلاد ✨';
+            return;
+        }
+
+        if (inputDate === '2007-10-17') {
+            errorMsg.textContent = '';
+            loginScreen.classList.remove('active');
+            envelopeScreen.classList.add('active');
+        } else {
+            errorMsg.textContent = 'التاريخ غير صحيح، حاول مرة أخرى! ❌';
+        }
+    });
+
+    envelopeBtn.addEventListener('click', function() {
+        bgMusic.play().catch(e => console.log("التشغيل يتطلب تفاعل المتصفح"));
+        envelopeScreen.classList.remove('active');
+        dashboardScreen.classList.add('active');
+    });
+
+    function openSubScreen(screenId) {
+        document.getElementById(screenId).classList.add('active');
+        if (screenId === 'gift-sub') {
+            bgMusic.pause(); 
+        }
+    }
+
+    function closeSubScreen(screenId) {
+        document.getElementById(screenId).classList.remove('active');
+        if (screenId === 'gift-sub') {
+            bgMusic.play().catch(e => console.log("استئناف الموسيقى"));
+            if (giftVideo) {
+                giftVideo.pause();
+                giftVideo.currentTime = 0;
+            }
+        }
+    }
+
+    if (giftVideo) {
+        giftVideo.addEventListener('play', function() {
+            bgMusic.pause();
+        });
+    }
+</script>
+</body>
+</html>
